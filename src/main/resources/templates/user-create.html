@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create new user</title>
+</head>
+<body>
+<h1>Create New User</h1>
+<a href="/menu">Main menu</a>
+<br/>
+<a href="/logout">Logout</a>
+<br/>
+
+<form method="POST" action="/user/create">
+    <table border="0">
+        <tr>
+            <td>User Name</td>
+            <td><input type="text" name="username" th:value="${user.username}"/></td>
+        </tr>
+        <tr>
+            <td>Password</td>
+            <td><input type="password" name="password" th:value="${user.password}"/></td>
+        </tr>
+        <tr>
+            <td>Confirm Password</td>
+            <td><input type="password" name="password2" th:value="${user.password2}"/></td>
+        </tr>
+        <tr>
+            <td>First Name</td>
+            <td><input type="text" name="firstName" th:value="${user.firstName}"/></td>
+        </tr>
+        <tr>
+            <td>Last Name</td>
+            <td><input type="text" name="lastName" th:value="${user.lastName}"/></td>
+        </tr>
+        <tr>
+            <td>Sex</td>
+            <td><input type="text" name="sex" th:value="${user.sex}"/></td>
+        </tr>
+        <tr>
+            <td>Address</td>
+            <td><input type="text" name="address" th:value="${user.address}"/></td>
+        </tr>
+        <tr>
+            <td>Email</td>
+            <td><input type="text" name="email" th:value="${user.email}"/></td>
+        </tr>
+        <tr>
+            <td>Mobile Phone</td>
+            <td><input type="text" name="mobilePhone" th:value="${user.mobilePhone}"/></td>
+        </tr>
+
+        <tr>
+            <td colspan="2">
+                <input type="submit" value="save"/>
+            </td>
+        </tr>
+    </table>
+</form>
+<h2 th:if="${message!= null}" th:text="${message}"></h2>
+</body>
+</html>

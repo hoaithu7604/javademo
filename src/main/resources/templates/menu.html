@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Menu</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<div th:if="${isAdmin}">
+    <h1>Admin Function</h1>
+    <a href="/user/create">Create a new user</a>
+    <br/>
+    <a href="/user/search">Search user</a>
+    <br/>
+    <a href="/logout">Logout</a>
+</div>
+<div th:unless="${isAdmin}">
+    <h1>User information</h1>
+    <a href="/user/info">Personal Information</a>
+    <br/>
+    <a href="/user/change-password">Change password</a>
+    <br/>
+    <a href="/logout">Logout</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User search</title>
+    <style>
+
+        table{
+            margin-bottom: 10px;
+            border-collapse: collapse;
+        }
+        .result table, .result th, .result td {
+            border: 1px solid black;
+        }
+        .result tr:nth-child(even) {background: #CCC}
+        .result tr:nth-child(odd) {background: #FFF}
+    </style>
+</head>
+<body>
+
+<h1>Search User</h1>
+<a href="/menu">Main menu</a>
+<br/>
+<a href="/logout">Logout</a>
+<br/>
+
+<form method="POST" action="/user/search">
+    <table>
+        <tr>
+            <td>User name <input type="text" name="username" th:value="${search.username}"/></td>
+            <td>
+                Role
+                <select name="groupId" id="role">
+                    <option th:selected="${search.groupId==0}" value="0">Both</option>
+                    <option th:selected="${search.groupId==1}" value="1">Admin</option>
+                    <option th:selected="${search.groupId==2}" value="2">User</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>First Name <input type="text" name="firstName" th:default="${search.firstName}"/></td>
+            <td>Last Name <input type="text" name="lastName" th:value="${search.lastName}"/></td>
+        </tr>
+        <tr>
+            <td>Sex <input type="text" name="sex" th:value="${search.sex}"/></td>
+            <td>Email <input type="text" name="email" th:value="${search.email}"/></td>
+        </tr>
+        <tr>
+            <td>Address <input type="text" name="address" th:value="${search.address}"/></td>
+            <td>Mobile Phone <input type="text" name="mobilePhone" th:value="${search.mobilePhone}"/></td>
+            <td><input type="submit" value="search"/></td>
+        </tr>
+    </table>
+</form>
+<table class="result">
+        <tr>
+            <td>User Name</td>
+            <td>First Name</td>
+            <td>Last Name</td>
+            <td>Sex</td>
+            <td>Address</td>
+            <td>Email</td>
+            <td>Mobile Phone</td>
+        </tr>
+    <tr th:if="${users.empty}">
+        <td colspan="7"> No user found </td>
+    </tr>
+    <tr th:each="user : ${users}">
+        <td><span th:text="${user.username}"></span></td>
+        <td><span th:text="${user.firstName}"></span></td>
+        <td><span th:text="${user.lastName}"></span></td>
+        <td><span th:text="${user.sex}"></span></td>
+        <td><span th:text="${user.address}"></span></td>
+        <td><span th:text="${user.email}"></span></td>
+        <td><span th:text="${user.mobilePhone}"></span></td>
+    </tr>
+</table>
+</body>
+</html>
