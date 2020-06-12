@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login page</title>
+</head>
+<body>
+<h3>Login Page</h3>
+<form method="POST" action="/hibernate/login">
+    <table border="0">
+        <tr>
+            <td>User Name</td>
+            <td><input type="text" name="username" th:value="${login.username}"/> </td>
+        </tr>
+        <tr>
+            <td>Password</td>
+            <td><input type="password" name="password" th:value="${login.password}"/> </td>
+        </tr>
+        <tr>
+            <td colspan ="2">
+                <input type="submit" value= "Submit" />
+            </td>
+        </tr>
+    </table>
+<!--    render error-->
+    <h2 th:if="${message!= null}" th:text="${message}"></h2>
+</form>
+</body>
+</html>
