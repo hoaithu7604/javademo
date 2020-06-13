@@ -1,9 +1,7 @@
-package com.javademo.javademo.controller.hibernate;
+package com.javademo.javademo.controller.jpa;
 
-import com.javademo.javademo.hibernate.dao.UserDAO;
-import com.javademo.javademo.hibernate.domain.User;
-import com.javademo.javademo.jdbc.bo.UserBO;
-import com.javademo.javademo.jdbc.dto.UserDTO;
+import com.javademo.javademo.jpa.domain.User;
+import com.javademo.javademo.jpa.dao.JpaUserDAO;
 import com.javademo.javademo.requestmodel.ChangePasswordModel;
 import com.javademo.javademo.requestmodel.CreateUserModel;
 import com.javademo.javademo.security.Auth;
@@ -17,27 +15,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller()
-@RequestMapping("hibernate/user")
-public class HibernateUserController {
+@RequestMapping("jpa/user")
+public class JpaUserController {
 
-    private UserDAO userDAO;
+    private JpaUserDAO userDAO;
 
     @Autowired
-    public HibernateUserController(UserDAO userDAO) {
-        this.userDAO = userDAO;
+    public JpaUserController(JpaUserDAO jpaUserDAO) {
+        this.userDAO = jpaUserDAO;
     }
 
+    @Auth(role=Auth.Role.ADMIN)
     @GetMapping("/create")
     public String create(Model model){
         CreateUserModel user = new CreateUserModel("","","","","","","","","",0);
         model.addAttribute("user",user);
-        return "hibernate/user-create";
+        return "jpa/user-create";
     }
 
+    @Auth(role=Auth.Role.ADMIN)
     @RequestMapping(value = "/create", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public String createP(CreateUserModel user, Model model){
@@ -72,22 +70,22 @@ public class HibernateUserController {
                 //}
             }
         }
-        return "hibernate/user-create";
+        return "jpa/user-create";
     }
 
+    @Auth(role=Auth.Role.ADMIN)
     @GetMapping("/search")
     public String search(Model model){
         User search = new User("","","","","","","","",0);
-        UserBO userBO = new UserBO();
         model.addAttribute("users",userDAO.getAll());
         model.addAttribute("search",search);
-        return "hibernate/user-search";
+        return "jpa/user-search";
     }
 
+    @Auth(role=Auth.Role.ADMIN)
     @RequestMapping(value = "/search", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public String searchP(User search, Model model){
-        UserBO userBO = new UserBO();
         model.addAttribute("users", userDAO.get(
                 search.getUsername(),
                 Integer.toString(search.getGroupId()),
@@ -99,7 +97,7 @@ public class HibernateUserController {
                 search.getMobilePhone()
         ));
         model.addAttribute("search",search);
-        return "hibernate/user-search";
+        return "jpa/user-search";
     }
 
     @Auth(role=Auth.Role.LOGIN)
@@ -107,7 +105,7 @@ public class HibernateUserController {
     public String info(Model model, HttpSession session){
         User user = (User)session.getAttribute(Constant.USER_SESSION_KEY);
         model.addAttribute("user",user);
-        return "hibernate/user-info";
+        return "jpa/user-info";
     }
 
     @Auth(role=Auth.Role.LOGIN)
@@ -126,7 +124,7 @@ public class HibernateUserController {
 
         model.addAttribute("user",user);
         model.addAttribute("message","Update successfully");
-        return "hibernate/user-info";
+        return "jpa/user-info";
     }
 
     @Auth(role=Auth.Role.LOGIN)
@@ -134,7 +132,7 @@ public class HibernateUserController {
     public String changePassword(Model model){
         ChangePasswordModel changeModel = new ChangePasswordModel("","","");
         model.addAttribute("model",changeModel);
-        return "hibernate/change-password";
+        return "jpa/change-password";
     }
 
     @Auth(role=Auth.Role.LOGIN)
@@ -157,6 +155,6 @@ public class HibernateUserController {
             model.addAttribute("message","Update successfully");
             model.addAttribute("model",new ChangePasswordModel("","",""));
         }
-        return "hibernate/change-password";
+        return "jpa/change-password";
     }
 }

@@ -1,4 +1,4 @@
-package com.javademo.javademo.hibernate.domain;
+package com.javademo.javademo.jpa.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

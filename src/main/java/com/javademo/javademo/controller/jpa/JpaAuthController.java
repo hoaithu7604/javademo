@@ -1,8 +1,7 @@
-package com.javademo.javademo.controller.hibernate;
+package com.javademo.javademo.controller.jpa;
 
-import com.javademo.javademo.hibernate.dao.UserDAO;
-import com.javademo.javademo.hibernate.domain.User;
-import com.javademo.javademo.jdbc.dto.UserDTO;
+import com.javademo.javademo.jpa.dao.JpaUserDAO;
+import com.javademo.javademo.jpa.domain.User;
 import com.javademo.javademo.requestmodel.LoginModel;
 import com.javademo.javademo.security.Auth;
 import com.javademo.javademo.util.Constant;
@@ -17,13 +16,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("hibernate")
-public class HibernateAuthController {
+@RequestMapping("jpa")
+public class JpaAuthController {
 
-    private UserDAO userDAO;
+    private JpaUserDAO userDAO;
 
     @Autowired
-    public HibernateAuthController(UserDAO userDAO) {
+    public JpaAuthController(JpaUserDAO userDAO) {
         this.userDAO = userDAO;
     }
 
@@ -31,7 +30,7 @@ public class HibernateAuthController {
     public String login(Model model){
         LoginModel login = new LoginModel("","");
         model.addAttribute("login",login);
-        return "hibernate/login";
+        return "jpa/login";
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST,
@@ -41,7 +40,7 @@ public class HibernateAuthController {
         if (user==null){
             model.addAttribute("login",login);
             model.addAttribute("message","Wrong username or password");
-            return "hibernate/login";
+            return "jpa/login";
         }
         else {
             session.setAttribute("isLogin", true);
@@ -51,7 +50,7 @@ public class HibernateAuthController {
             else session.setAttribute("role", Auth.Role.LOGIN);
 
             session.setAttribute(Constant.USER_SESSION_KEY,user);
-            return "redirect:/hibernate/menu";
+            return "redirect:/jpa/menu";
         }
     }
 
@@ -61,7 +60,7 @@ public class HibernateAuthController {
         session.setAttribute("isLogin",null);
         session.setAttribute("role",null);
         session.setAttribute(Constant.USER_SESSION_KEY,null);
-        return "redirect:/hibernate/login";
+        return "redirect:/jpa/login";
     }
 
     @GetMapping("/deny")

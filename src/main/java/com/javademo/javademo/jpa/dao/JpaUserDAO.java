@@ -1,58 +1,54 @@
-package com.javademo.javademo.hibernate.dao;
+package com.javademo.javademo.jpa.dao;
 
-import com.javademo.javademo.hibernate.domain.User;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.javademo.javademo.jpa.domain.User;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.Serializable;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 @Transactional
-public class UserDAO {
-    private SessionFactory sessionFactory;
+public class JpaUserDAO {
+    @PersistenceContext
+    @Qualifier("jpaEntityManagerFactory")
+    private EntityManager em;
 
-    @Autowired
-    public UserDAO(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
-
-    private Session currentSession() {
-        return sessionFactory.getCurrentSession();
-    }
-    public User findByUsername(String username) {
-        return currentSession().get(User.class, username);
+    public JpaUserDAO() {
     }
 
     public void addUser(User user) {
-        Serializable s = currentSession().save(user);
+        em.persist(user);
+    }
+    public User findByUsername(String username) {
+        return em.find(User.class, username);
     }
 
-    public List<User> getAll() {
-        String hql = "from "+User.class.getName();
-        Query<User> query = currentSession().createQuery(hql,User.class);
-        return query.list();
+    public List<User> getAll(){
+        return em.createQuery("select u from "+ User.class.getName()+" u").getResultList();
     }
 
     public List<User> get(String username, String role, String firstname, String lastname, String sex, String address, String email, String mobilephone)
     {
-        String hql = "FROM " + User.class.getName() + handleSearchQuery(username,role,firstname,lastname,sex,address,email,mobilephone);
-        Query<User> query = currentSession().createQuery(hql, User.class);
-        return query.getResultList();
+        String sql = "select u from " + User.class.getName() + " u "+ handleSearchQuery(username,role,firstname,lastname,sex,address,email,mobilephone);
+        return em.createQuery(sql).getResultList();
     }
 
-    public User login(String username, String password){
+    public User login(String username, String password) {
         try {
-            String hql = "FROM " + User.class.getName() + " where username = :username and password = :password";
-            Query<User> query = currentSession().createQuery(hql, User.class);
+            String jpql = "select u from " + User.class.getName() + " u where u.username = :username and u.password = :password";
+            Query query = em.createQuery(jpql,User.class);
             query.setParameter("username", username);
             query.setParameter("password", password);
-            User result = query.getSingleResult();
+            User result = (User) query.getSingleResult();
             return result;
         }
         catch(Exception e){
@@ -69,19 +65,18 @@ public class UserDAO {
             entity.setLastName(lastname);
             entity.setMobilePhone(mobilephone);
             entity.setSex(sex);
-            currentSession().update(entity);
+            em.merge(entity);
         }
         catch (Exception e){
 
         }
 
     }
-
     public void changPassword(String username, String password){
         try {
             User entity = findByUsername(username);
             entity.setPassword(password);
-            currentSession().update(entity);
+            em.merge(entity);
         }
         catch (Exception e){
 
@@ -89,7 +84,7 @@ public class UserDAO {
 
     }
 
-    private String handleSearchQuery(String username, String role, String firstname, String lastname, String sex, String address, String email, String mobilephone){
+        private String handleSearchQuery(String username, String role, String firstname, String lastname, String sex, String address, String email, String mobilephone){
         String query = "";
         List<String> statement = new ArrayList<String>();
 
