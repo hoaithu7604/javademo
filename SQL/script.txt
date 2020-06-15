@@ -1,0 +1,34 @@
+drop database if exists j2ee_db;
+create database j2ee_db;
+ALTER DATABASE j2ee_db CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+use j2ee_db;
+
+create table users(
+	username varchar(20) not null,
+    password varchar(45) not null,
+    firstname varchar(45),
+    lastname varchar(45),
+    sex varchar(10),
+    address varchar(45),
+    email varchar(45),
+    mobilephone varchar(45),
+    groupid int not null,
+	primary key(username)
+);
+
+create table usergroup(
+	groupid int not null auto_increment,
+    groupname varchar(45) not null,
+    notes varchar(45) not null,
+	primary key(groupid)
+);
+
+alter table users add foreign key(groupid) references usergroup(groupid);
+
+INSERT INTO usergroup(groupname,notes)
+VALUES ('group 1','group 1 notes'), ('group 2','group 2 notes'), ('group 3','group 3 notes');
+
+INSERT INTO users(username,password,groupid)
+VALUES ('user1','1234',1),('user2','1234',1),('user3','1234',2),('user4','1234',3),('user5','1234',2),('user6','1234',2),('user7','1234',1),('user8','1234',3),
+		('user9','1234',1),('user10','1234',3),('user11','1234',2),('user12','1234',3),('user13','1234',1),('user14','1234',1),('user15','1234',2),('user16','1234',2);
